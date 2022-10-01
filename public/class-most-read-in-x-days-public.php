@@ -135,12 +135,13 @@ class Most_Read_In_X_Days_Public {
 				'read_counter' => $result[0]->read_counter+1
 			];
 			$where = [
-				'read_date' => $today_date
+				'read_date' => $today_date,
+				'post_id' => $post_id
 			];
 			
 			$wpdb->update($table_name, $data, $where);
 		}
-		else {
+		else { // Insert as new entry for this date and for this post
 			$data = [
 				'post_id' => $post_id,
 				'read_counter' => 1,
