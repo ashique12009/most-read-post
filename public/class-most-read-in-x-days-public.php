@@ -105,7 +105,29 @@ class Most_Read_In_X_Days_Public {
 	}
 
 	public function make_query_and_show_posts() {
-		echo 'HELLO';
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'most_read_posts';
+
+		$results = $wpdb->get_results("
+			SELECT post_id, read_counter 
+			FROM $table_name 
+			WHERE 
+			read_date >= DATE(NOW() - INTERVAL 7 DAY)
+			ORDER BY read_counter 
+			DESC 
+			LIMIT 4"
+		);
+
+		$html = "<ul>";
+		if ($results) {
+			foreach ($results as $result) {
+				$html .= '<li><a href="'.get_permalink($result->post_id).'">'.get_the_title($result->post_id).'</a> ('.$result->read_counter.')</li>';
+			}
+		}
+		$html .= "</ul>";
+
+		return $html;
 	}
 
 	public function most_read_track_post_views($post_id) {
